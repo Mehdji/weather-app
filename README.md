@@ -1,47 +1,137 @@
 # Weather App
 
-Check the current weather on any city on the planet. Switch between metric and imperial units.
+Application meteo responsive developpee avec Next.js, realisee dans le cadre d'un exercice de positionnement / auto-apprentissage CDA DevOps.
 
-![Alt img](https://images.ctfassets.net/zlsyc9paq6sa/3uBrJ07WSM40FpolgjInHY/7d886cb4187b52194bf9b63c183a1d3a/1627637330_x.gif)
+L'application permet de rechercher une ville et d'afficher en temps reel les donnees meteo actuelles via l'API OpenWeather.
 
-## Features
+## Objectif du projet
 
-1. User's ability to search cities
+Ce depot presente un projet front-end simple permettant de :
 
-2. Current local time and date
+- consommer une API externe depuis une route API Next.js
+- manipuler l'etat avec les hooks React
+- afficher dynamiquement des donnees meteo
+- gerer les etats de chargement et d'erreur
+- configurer une variable d'environnement pour securiser la cle API
 
-3. Temperatures and humidity
+## Fonctionnalites
 
-4. Wind speed and direction
+- recherche d'une ville
+- affichage de la temperature actuelle et du ressenti
+- affichage de la description meteo et de l'icone associee
+- affichage de l'humidite
+- affichage de la vitesse et de la direction du vent
+- affichage de la visibilite
+- affichage des heures de lever et coucher du soleil
+- bascule entre systeme metrique et imperial
+- ecran de chargement
+- gestion d'erreur si la ville n'est pas trouvee
 
-5. Sunrise and sunset times
+## Stack technique
 
-6. Metric vs Imperial system
+- Next.js
+- React
+- CSS Modules
+- API Routes Next.js
+- OpenWeather API
 
-7. Error handling and loading info
+## Structure du projet
+
+```text
+.
+|- components/      # Composants d'interface
+|- pages/           # Pages Next.js et route API
+|  |- api/data.js   # Proxy serveur vers OpenWeather
+|- public/icons/    # Icones meteo et pictogrammes
+|- services/        # Fonctions utilitaires et conversions
+|- styles/          # Styles globaux et modules CSS
+```
 
 ## Installation
 
-1. `git clone https://github.com/madzadev/weather-app.git`
+1. Cloner le depot :
 
-2. `cd weather-app`
+```bash
+git clone https://github.com/<ton-username>/weather-app.git
+cd weather-app
+```
 
-3. `npm install`
+2. Installer les dependances :
 
-4. Log-in to [Openweathermap.com](https://openweathermap.org/)
+```bash
+npm install
+```
 
-5. Create an API key
+3. Creer un fichier d'environnement local :
 
-6. `cp .env.example .env.local`
+```bash
+cp .env.example .env.local
+```
 
-7. Paste API key for `OPENWEATHER_API_KEY`
+Sur Windows PowerShell, si `cp` ne fonctionne pas :
 
-8. `npm run dev`
+```powershell
+Copy-Item .env.example .env.local
+```
 
-## Contributions
+4. Ajouter ta cle API OpenWeather dans `.env.local` :
 
-Any feature requests and pull requests are welcome!
+```env
+OPENWEATHER_API_KEY="your_api_key_here"
+```
 
-## License
+5. Lancer le serveur de developpement :
 
-The project is under [MIT license](https://choosealicense.com/licenses/mit/).
+```bash
+npm run dev
+```
+
+6. Ouvrir l'application dans le navigateur :
+
+```text
+http://localhost:3000
+```
+
+## Scripts disponibles
+
+- `npm run dev` : lance l'application en mode developpement
+- `npm run build` : construit l'application pour la production
+- `npm run start` : demarre la version de production
+- `npm run lint` : lance ESLint
+
+## Configuration
+
+L'application utilise une variable d'environnement cote serveur :
+
+- `OPENWEATHER_API_KEY` : cle API necessaire pour interroger OpenWeather
+
+Important :
+
+- ne pas versionner une vraie cle API dans `.env.example`
+- utiliser `.env.local` pour les secrets locaux
+
+## Fonctionnement
+
+Le front envoie une requete `POST` vers la route interne `pages/api/data.js`.
+
+Cette route API :
+
+- recupere la ville saisie
+- interroge l'API OpenWeather
+- renvoie la reponse JSON au front
+
+Le composant principal stocke ensuite cette reponse dans le state React `weatherData`, puis distribue les donnees aux composants d'affichage.
+
+## Ameliorations possibles
+
+- ajouter des tests unitaires et/ou tests d'integration
+- gerer proprement les erreurs reseau et les codes HTTP
+- eviter les doubles reponses dans la route API
+- ajouter une recherche au clic en plus de la touche Entree
+- afficher des previsions sur plusieurs jours
+- dockeriser le projet pour un deploiement plus simple
+- ajouter une pipeline CI/CD
+
+## Auteur
+
+Projet repris et personnalise a partir d'un projet source existant, puis adapte dans le cadre de l'exercice.

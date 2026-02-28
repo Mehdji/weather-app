@@ -70,6 +70,8 @@ export const App = () => {
     </div>
   ) : weatherData && weatherData.message ? (
     <ErrorScreen errorMessage="City not found, try again!">
+      <p>{weatherData.message}</p>
+      
       <Search
         onFocus={(e) => (e.target.value = "")}
         onChange={(e) => setCityInput(e.target.value)}
