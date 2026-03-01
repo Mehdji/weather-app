@@ -9,7 +9,6 @@ import { MetricsBox } from "../components/MetricsBox";
 import { UnitSwitch } from "../components/UnitSwitch";
 import { LoadingScreen } from "../components/LoadingScreen";
 import { ErrorScreen } from "../components/ErrorScreen";
-import { cityConfig} from "../config/city.json"
 
 import styles from "../styles/Home.module.css";
 
@@ -19,15 +18,9 @@ export const App = () => {
   const [weatherData, setWeatherData] = useState();
   const [unitSystem, setUnitSystem] = useState("metric");
 
-  const {city , country } = cityConfig;
-
   useEffect(() => {
     const getData = async () => {
-      const res = await fetch("api/data", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cityInput }),
-      });
+      const res = await fetch("api/data");
       const data = await res.json();
       setWeatherData({ ...data });
       setCityInput("");
@@ -43,8 +36,8 @@ export const App = () => {
   return weatherData && !weatherData.message ? (
     <div className={styles.wrapper}>
       <MainCard
-        city={city}
-        country={country}
+        city={weatherData.name}
+        country={weatherData.sys.country}
         description={weatherData.weather[0].description}
         iconName={weatherData.weather[0].icon}
         unitSystem={unitSystem}
