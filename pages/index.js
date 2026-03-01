@@ -9,6 +9,7 @@ import { MetricsBox } from "../components/MetricsBox";
 import { UnitSwitch } from "../components/UnitSwitch";
 import { LoadingScreen } from "../components/LoadingScreen";
 import { ErrorScreen } from "../components/ErrorScreen";
+import { cityConfig} from "../config/city.json"
 
 import styles from "../styles/Home.module.css";
 
@@ -17,6 +18,8 @@ export const App = () => {
   const [triggerFetch, setTriggerFetch] = useState(true);
   const [weatherData, setWeatherData] = useState();
   const [unitSystem, setUnitSystem] = useState("metric");
+
+  const {city , country } = cityConfig;
 
   useEffect(() => {
     const getData = async () => {
@@ -40,8 +43,8 @@ export const App = () => {
   return weatherData && !weatherData.message ? (
     <div className={styles.wrapper}>
       <MainCard
-        city={weatherData.name}
-        country={weatherData.sys.country}
+        city={city}
+        country={country}
         description={weatherData.weather[0].description}
         iconName={weatherData.weather[0].icon}
         unitSystem={unitSystem}
