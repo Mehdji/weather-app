@@ -1,31 +1,32 @@
 # Weather App
 
-Application meteo responsive developpee avec Next.js, realisee dans le cadre d'un exercice de positionnement / auto-apprentissage CDA DevOps.
+Projet d'adaptation d'une application meteo existante realise dans le cadre d'un exercice de positionnement / auto-apprentissage CDA DevOps.
 
-L'application permet de rechercher une ville et d'afficher en temps reel les donnees meteo actuelles via l'API OpenWeather.
+Le point de depart du projet est le depot source suivant :
 
-## Objectif du projet
+```text
+https://github.com/madzadev/weather-app
+```
 
-Ce depot presente un projet front-end simple permettant de :
+## Contexte du brief
 
-- consommer une API externe depuis une route API Next.js
-- manipuler l'etat avec les hooks React
-- afficher dynamiquement des donnees meteo
-- gerer les etats de chargement et d'erreur
-- configurer une variable d'environnement pour securiser la cle API
+L'objectif est d'adapter une interface meteo destinee a des ecrans d'information pour un reseau de transports en commun.
 
-## Fonctionnalites
+Le brief impose les evolutions suivantes :
 
-- recherche d'une ville
-- affichage de la temperature actuelle et du ressenti
-- affichage de la description meteo et de l'icone associee
-- affichage de l'humidite
-- affichage de la vitesse et de la direction du vent
-- affichage de la visibilite
-- affichage des heures de lever et coucher du soleil
-- bascule entre systeme metrique et imperial
-- ecran de chargement
-- gestion d'erreur si la ville n'est pas trouvee
+- remplacer l'API OpenWeather par l'API Open-Meteo
+- supprimer la recherche manuelle de ville dans l'interface
+- utiliser une ville pre-configuree via un fichier de configuration
+- rafraichir automatiquement les donnees meteo toutes les heures
+- conserver une structure de projet claire et exploitable
+
+## Prerequis
+
+- HTML / CSS
+- JavaScript
+- `fetch`
+- Git
+- npm
 
 ## Stack technique
 
@@ -33,7 +34,6 @@ Ce depot presente un projet front-end simple permettant de :
 - React
 - CSS Modules
 - API Routes Next.js
-- OpenWeather API
 
 ## Structure du projet
 
@@ -41,11 +41,37 @@ Ce depot presente un projet front-end simple permettant de :
 .
 |- components/      # Composants d'interface
 |- pages/           # Pages Next.js et route API
-|  |- api/data.js   # Proxy serveur vers OpenWeather
-|- public/icons/    # Icones meteo et pictogrammes
-|- services/        # Fonctions utilitaires et conversions
+|  |- api/data.js   # Recuperation des donnees meteo
+|- public/icons/    # Icones de l'interface
+|- services/        # Fonctions utilitaires
 |- styles/          # Styles globaux et modules CSS
 ```
+
+## Fonctionnalites actuellement presentes
+
+Dans son etat actuel, l'application permet :
+
+- d'afficher des donnees meteo courantes pour une ville
+- d'afficher la temperature et le ressenti
+- d'afficher l'humidite
+- d'afficher la vitesse et la direction du vent
+- d'afficher la visibilite
+- d'afficher les heures de lever et coucher du soleil
+- de gerer un etat de chargement
+- de gerer un etat d'erreur
+- de basculer entre systeme metrique et imperial
+
+## Ecart entre le brief et l'etat actuel
+
+Le projet d'origine repose sur OpenWeather et incluait un champ de recherche utilisateur.
+
+Le brief demande au contraire :
+
+- une source de donnees basee sur Open-Meteo
+- une ville definie dans un fichier de configuration
+- un rafraichissement automatique toutes les heures
+
+Ces points doivent donc etre pris en compte dans l'adaptation finale du projet.
 
 ## Installation
 
@@ -62,31 +88,13 @@ cd weather-app
 npm install
 ```
 
-3. Creer un fichier d'environnement local :
-
-```bash
-cp .env.example .env.local
-```
-
-Sur Windows PowerShell, si `cp` ne fonctionne pas :
-
-```powershell
-Copy-Item .env.example .env.local
-```
-
-4. Ajouter ta cle API OpenWeather dans `.env.local` :
-
-```env
-OPENWEATHER_API_KEY="your_api_key_here"
-```
-
-5. Lancer le serveur de developpement :
+3. Lancer le serveur de developpement :
 
 ```bash
 npm run dev
 ```
 
-6. Ouvrir l'application dans le navigateur :
+4. Ouvrir l'application :
 
 ```text
 http://localhost:3000
@@ -95,43 +103,43 @@ http://localhost:3000
 ## Scripts disponibles
 
 - `npm run dev` : lance l'application en mode developpement
-- `npm run build` : construit l'application pour la production
-- `npm run start` : demarre la version de production
-- `npm run lint` : lance ESLint
+- `npm run build` : genere la version de production
+- `npm run start` : lance la version de production
+- `npm run lint` : verifie le code avec ESLint
 
-## Configuration
+## Logique generale de l'application
 
-L'application utilise une variable d'environnement cote serveur :
+L'application charge les donnees meteo depuis une route API Next.js.
 
-- `OPENWEATHER_API_KEY` : cle API necessaire pour interroger OpenWeather
+Le composant principal :
 
-Important :
+- declenche un appel HTTP
+- recupere la reponse JSON
+- stocke les donnees dans le state React `weatherData`
+- transmet ces donnees aux composants de presentation
 
-- ne pas versionner une vraie cle API dans `.env.example`
-- utiliser `.env.local` pour les secrets locaux
+Les composants affichent ensuite les informations meteo sous forme de cartes et de blocs d'information.
 
-## Fonctionnement
+## Criteres de qualite du brief
 
-Le front envoie une requete `POST` vers la route interne `pages/api/data.js`.
+Le rendu attendu doit notamment garantir :
 
-Cette route API :
-
-- recupere la ville saisie
-- interroge l'API OpenWeather
-- renvoie la reponse JSON au front
-
-Le composant principal stocke ensuite cette reponse dans le state React `weatherData`, puis distribue les donnees aux composants d'affichage.
+- le respect integral des consignes
+- la lisibilite des informations affichees
+- la bonne restitution des donnees meteo de la ville configuree
+- le rafraichissement effectif des donnees toutes les heures
+- une structure de code propre et coherent avec l'application existante
 
 ## Ameliorations possibles
 
-- ajouter des tests unitaires et/ou tests d'integration
-- gerer proprement les erreurs reseau et les codes HTTP
-- eviter les doubles reponses dans la route API
-- ajouter une recherche au clic en plus de la touche Entree
-- afficher des previsions sur plusieurs jours
-- dockeriser le projet pour un deploiement plus simple
+- finaliser la migration complete vers Open-Meteo
+- ajouter un fichier de configuration dedie a la ville
+- mettre en place un rafraichissement automatique via `setInterval` ou logique equivalente
+- renforcer la gestion des erreurs reseau et des reponses API
+- ajouter des tests
+- preparer une containerisation Docker
 - ajouter une pipeline CI/CD
 
 ## Auteur
 
-Projet repris et personnalise a partir d'un projet source existant, puis adapte dans le cadre de l'exercice.
+Projet adapte et personnalise a partir d'un projet existant dans le cadre d'un exercice technique.
